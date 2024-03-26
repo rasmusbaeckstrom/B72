@@ -4,7 +4,7 @@ export default function RepetitionSelector({ value, onChange }) {
   return (
     <div>
       <label>
-        Allow letter repetition:
+        Allow letter repetition in random word:
         <input
           type="checkbox"
           checked={value}
