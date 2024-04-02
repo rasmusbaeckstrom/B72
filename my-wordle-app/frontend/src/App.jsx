@@ -9,7 +9,6 @@ function App() {
   const [allowRepetition, setAllowRepetition] = useState(true); 
   const [allowSameWordGuess, setAllowSameWordGuess] = useState(false); 
   const [guess, setGuess] = useState(''); 
-  const [feedbackResult, setFeedbackResult] = useState([]);
   const [words, setWords] = useState({});
   const [previousGuesses, setPreviousGuesses] = useState([]);
   const [randomWord, setRandomWord] = useState(false);
@@ -46,7 +45,7 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!allowSameWordGuess && previousGuesses.includes(guess.toUpperCase())) {
+    if (!allowSameWordGuess && previousGuesses.some(previousGuess => previousGuess.guess === guess.toUpperCase())) {
       alert("You've already guessed this word.");
       return;
     }
@@ -57,9 +56,9 @@ function App() {
     }
 
     const result = feedback(randomWord?.toUpperCase(), guess.toUpperCase());
-    setFeedbackResult(result);
 
-    setPreviousGuesses(prevGuesses => [...prevGuesses, guess.toUpperCase()]);
+    setPreviousGuesses(prevGuesses => [...prevGuesses, { guess: guess.toUpperCase(), feedback: result }]);
+    setGuess('');
   };
 
   const handleGuessChange = (e) => {
@@ -69,23 +68,29 @@ function App() {
   return (
     <div className="App">
       <h1>Welcome to Wordle!</h1>
-        <>
-          <LetterCountSelector value={numLetters} onChange={handleLettersChange} />
-          <RepetitionSelector value={allowRepetition} onChange={handleRepetitionChange} />
-          <button onClick={handleStartGame}>Start the game!</button>
-        </>
-        <form onSubmit={handleSubmit}>
-          <input type="text" value={guess} onChange={handleGuessChange} placeholder={`Enter a ${numLetters}-letter word`} />
-          <button type="submit">Guess</button>
-        </form>
-        <div>
-          <h2>Feedback</h2>
-          <ul>
-            {feedbackResult.map((item, index) => (
-              <li key={index}>{item.letter}: {item.result}</li>
-            ))}
-          </ul>
-        </div>
+      <>
+        <LetterCountSelector value={numLetters} onChange={handleLettersChange} />
+        <RepetitionSelector value={allowRepetition} onChange={handleRepetitionChange} />
+        <button onClick={handleStartGame}>Start the game!</button>
+      </>
+      <form onSubmit={handleSubmit}>
+        <input type="text" value={guess} onChange={handleGuessChange} placeholder={`Enter a ${numLetters}-letter word`} />
+        <button type="submit">Guess</button>
+      </form>
+      <div>
+        <h2>Feedback</h2>
+        <ul>
+          {previousGuesses.map((guess, guessIndex) => (
+            <li key={guessIndex}>
+              {guess.guess.split('').map((letter, letterIndex) => (
+                <span key={letterIndex}>
+                  {letter}: {guess.feedback[letterIndex].result}{' '}
+                </span>
+              ))}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
