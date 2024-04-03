@@ -1,0 +1,17 @@
+.correct {
+  font-size: 36px;
+  color: green;
+  background-color: lightgreen
+}
+
+.misplaced {
+  font-size: 36px;
+  color: yellow;
+  background-color: orange
+}
+
+.incorrect {
+  font-size: 36px;
+  color: red;
+  background-color: pink
+}

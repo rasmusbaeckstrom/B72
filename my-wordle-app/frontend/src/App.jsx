@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import LetterCountSelector from './components/LetterCountSelector';
 import RepetitionSelector from './components/RepetitionSelector';
-import feedback from './components/Feedback';
-//import wordsData from './components/words.json';
+import Feedback from './components/Feedback';
+import './components/styles.css'
+
 
 function App() {
   const [numLetters, setNumLetters] = useState('5'); 
@@ -13,11 +14,10 @@ function App() {
   const [previousGuesses, setPreviousGuesses] = useState([]);
   const [randomWord, setRandomWord] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
-
-  /*
-  useEffect(() => {
-    setWords(wordsData);
-  }, []);*/
+  const [timer, setTimer] = useState(0);
+  const [gameWon, setGameWon] = useState(false);
+  const [playerName, setPlayerName] = useState('');
+  const [highscoreSubmitted, setHighscoreSubmitted] = useState(false);
 
   useEffect(() => {
     async function loadItems() {
@@ -28,7 +28,6 @@ function App() {
   
     loadItems();
   }, []);
-  
 
   const handleLettersChange = (letters) => {
     setNumLetters(letters);
@@ -51,6 +50,10 @@ function App() {
     // visa det slumpade ordet, ta bort sen... 
     console.log("Slumpat ord:", newRandomWord);
     setGameStarted(true);
+    setTimer(0);
+    setPreviousGuesses([]);
+    setGameWon(false);
+    setGuess('');
   };
 
   const handleSubmit = (e) => {
@@ -66,7 +69,11 @@ function App() {
       return;
     }
 
-    const result = feedback(randomWord?.toUpperCase(), guess.toUpperCase());
+    const result = Feedback(randomWord?.toUpperCase(), guess.toUpperCase());
+
+    if (result.every(feedback => feedback.result === 'correct')) {
+      setGameWon(true);
+    }
 
     setPreviousGuesses(prevGuesses => [...prevGuesses, { guess: guess.toUpperCase(), feedback: result }]);
     setGuess('');
@@ -74,6 +81,33 @@ function App() {
 
   const handleGuessChange = (e) => {
     setGuess(e.target.value);
+  };
+
+  useEffect(() => {
+    let intervalId;
+    if (gameStarted && !gameWon) {
+      intervalId = setInterval(() => {
+        setTimer(prevTimer => prevTimer + 1);
+      }, 1000);
+    }
+    return () => clearInterval(intervalId);
+  }, [gameStarted, gameWon]);
+
+  const handleHighscoreSubmit = (e) => {
+    e.preventDefault();
+
+    const data = {
+      playerName,
+      time: timer,
+      guesses: previousGuesses,
+      settings: {
+        numLetters,
+        allowRepetition,
+      },
+    };
+    // data till backend? 
+    //fetch('/api/highscore', { method: 'POST', body: JSON.stringify(data) ?????????? })
+    setHighscoreSubmitted(true);
   };
   
   return (
@@ -91,17 +125,45 @@ function App() {
       <div>
         <h2>Feedback</h2>
         <ul>
-          {previousGuesses.map((guess, guessIndex) => (
-            <li key={guessIndex}>
-              {guess.guess.split('').map((letter, letterIndex) => (
-                <span key={letterIndex}>
-                  {letter}: {guess.feedback[letterIndex].result}{' '}
-                </span>
-              ))}
-            </li>
-          ))}
+        {previousGuesses.map((guess, guessIndex) => (
+  <li key={guessIndex}>
+    {guess.guess.split('').map((letter, letterIndex) => {
+      let className;
+      switch (guess.feedback[letterIndex].result) {
+        case 'correct':
+          className = 'correct';
+          break;
+        case 'misplaced':
+          className = 'misplaced';
+          break;
+        default:
+          className = 'incorrect';
+      }
+      return (
+        <span key={letterIndex} className={className}>
+          {letter}
+        </span>
+      );
+    })}
+  </li>
+))}
         </ul>
       </div>
+      {gameStarted && (
+        <div>
+          <h2>Timer</h2>
+          <p>{timer} seconds</p>
+        </div>
+      )}
+      {gameWon && !highscoreSubmitted && (
+        <div>
+          <h2>Congratulations! You've won!</h2>
+          <form onSubmit={handleHighscoreSubmit}>
+            <input type="text" value={playerName} onChange={(e) => setPlayerName(e.target.value)} placeholder="Enter your name" />
+            <button type="submit">Submit Highscore</button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }
