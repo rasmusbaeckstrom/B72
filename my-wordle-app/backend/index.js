@@ -1,18 +1,16 @@
 import express from "express";
+import fs from 'fs/promises';
+import words from './src/words.js'
 
 const app = express();
 
 app.use(express.json());
 
-const words = {
-  "3": ["dog", "cat", "bat"],
-  "4": ["rain", "wind", "snow"],
-  "5": ["cykla", "hallå", "paris"]
-};
 const highscore = [];
 
-app.get('/', (req, res) => {
-  res.send('Hello, world!');
+app.get('/', async (req, res) => {
+  const html = await fs.readFile('../frontend/dist/index.html');
+  res.type('html').send(html);
 });
 
 app.get('/api/words', (req, res) => {
@@ -28,5 +26,7 @@ app.post('/api/highscore', (req, res) => {
   highscore.push(newScore);
   res.status(201).send("Highscore added :)");
 });
+
+app.use('/assets', express.static('../frontend/dist/assets'));
 
 app.listen(5080);

@@ -26,18 +26,29 @@ export default function feedback(chosenWord, guessWord) {
     guessWordMap.get(letter).push(i);
   }
 
+  // Keep track of misplaced counts
+  const misplacedCount = new Map();
+
   // Loops through guessed word to provide feedback
   for (let i = 0; i < guessWord.length; i++) {
     const letter = guessWord[i];
     if (chosenWordMap.has(letter)) {
-      const positionsInchosenWord = chosenWordMap.get(letter);
-      const positionsInguessWord = guessWordMap.get(letter);
-      if (positionsInchosenWord.includes(i)) {
+      const positionsInChosenWord = chosenWordMap.get(letter);
+      const positionsInGuessWord = guessWordMap.get(letter);
+      if (positionsInChosenWord.includes(i)) {
         feedbackArray.push({ letter: letter, result: "correct" });
       } else if (
-        positionsInchosenWord.some((pos) => !positionsInguessWord.includes(pos))
+        positionsInChosenWord.some((pos) => !positionsInGuessWord.includes(pos))
       ) {
-        feedbackArray.push({ letter: letter, result: "misplaced" });
+        if (!misplacedCount.has(letter)) {
+          misplacedCount.set(letter, 0);
+        }
+        if (misplacedCount.get(letter) < positionsInChosenWord.length) {
+          feedbackArray.push({ letter: letter, result: "misplaced" });
+          misplacedCount.set(letter, misplacedCount.get(letter) + 1);
+        } else {
+          feedbackArray.push({ letter: letter, result: "incorrect" });
+        }
       } else {
         feedbackArray.push({ letter: letter, result: "incorrect" });
       }
