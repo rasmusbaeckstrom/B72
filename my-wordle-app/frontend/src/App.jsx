@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import LetterCountSelector from './components/LetterCountSelector';
 import RepetitionSelector from './components/RepetitionSelector';
 import feedback from './components/Feedback';
-import wordsData from './components/words.json';
+//import wordsData from './components/words.json';
 
 function App() {
   const [numLetters, setNumLetters] = useState('5'); 
@@ -14,10 +14,21 @@ function App() {
   const [randomWord, setRandomWord] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
 
-  //api fetch här sen...
+  /*
   useEffect(() => {
     setWords(wordsData);
+  }, []);*/
+
+  useEffect(() => {
+    async function loadItems() {
+      const response = await fetch('/api/words');
+      const payload = await response.json();
+      setWords(payload);
+    }
+  
+    loadItems();
   }, []);
+  
 
   const handleLettersChange = (letters) => {
     setNumLetters(letters);

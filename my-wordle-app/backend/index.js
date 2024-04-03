@@ -4,7 +4,11 @@ const app = express();
 
 app.use(express.json());
 
-const words = [];
+const words = {
+  "3": ["dog", "cat", "bat"],
+  "4": ["rain", "wind", "snow"],
+  "5": ["cykla", "hallå", "paris"]
+};
 const highscore = [];
 
 app.get('/', (req, res) => {
@@ -12,7 +16,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/words', (req, res) => {
-  res.json({ words });
+  res.json(words);
 });
 
 app.get('/api/highscore', (req, res) => {
