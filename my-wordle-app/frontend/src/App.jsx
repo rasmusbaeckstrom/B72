@@ -29,22 +29,26 @@ function App() {
     loadItems();
   }, []);
 
-  const handleLettersChange = (letters) => {
+  function handleLettersChange(letters) {
     setNumLetters(letters);
+    setGameStarted(false);
+    setPreviousGuesses([]);
   };
 
-  const handleRepetitionChange = (allow) => {
+  function handleRepetitionChange(allow) {
     setAllowRepetition(allow);
+    setGameStarted(false);
+    setPreviousGuesses([]);
   };
 
-  const getRandomWord = () => {
+  function getRandomWord() {
     const wordList = words[numLetters] || [];
     const filteredWords = allowRepetition ? wordList : wordList.filter(word => new Set(word).size === word.length);
     const randomIndex = Math.floor(Math.random() * filteredWords.length);
     return filteredWords[randomIndex];
   };
 
-  const handleStartGame = () => {
+  function handleStartGame() {
     const newRandomWord = getRandomWord();
     setRandomWord(newRandomWord);
     // visa det slumpade ordet, ta bort sen... 
@@ -56,7 +60,7 @@ function App() {
     setGuess('');
   };
 
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
 
     if (!allowSameWordGuess && previousGuesses.some(previousGuess => previousGuess.guess === guess.toUpperCase())) {
@@ -79,7 +83,7 @@ function App() {
     setGuess('');
   };
 
-  const handleGuessChange = (e) => {
+  function handleGuessChange(e) {
     setGuess(e.target.value);
   };
 
@@ -93,7 +97,7 @@ function App() {
     return () => clearInterval(intervalId);
   }, [gameStarted, gameWon]);
 
-  const handleHighscoreSubmit = (e) => {
+  function handleHighscoreSubmit(e) {
     e.preventDefault();
 
     const data = {
@@ -119,7 +123,7 @@ function App() {
         <button onClick={handleStartGame}>Start the game!</button>
       </>
       <form onSubmit={handleSubmit}>
-        <input type="text" value={guess} onChange={handleGuessChange} placeholder={`Enter a ${numLetters}-letter word`} />
+        <input type="text" value={guess} onChange={handleGuessChange} placeholder={`Enter a ${numLetters}-letter word`} disabled={!gameStarted} />
         <button type="submit">Guess</button>
       </form>
       <div>
