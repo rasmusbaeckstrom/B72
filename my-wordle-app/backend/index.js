@@ -48,6 +48,6 @@ app.post('/api/highscores', async (req, res) => {
   res.status(201).json(highscoreData);
 });
 
-//app.use('/assets', express.static('../frontend/dist/assets'));
+app.use('/assets', express.static('../frontend/dist/assets'));
 
 app.listen(5080);
