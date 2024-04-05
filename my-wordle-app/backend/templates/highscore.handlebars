@@ -1,0 +1,12 @@
+<h1>Highscores</h1>
+<ul>
+    {{#each highscores}}
+        <li>
+            Name: {{this._doc.playerName}} - 
+            Number of guesses: {{this._doc.guesses.length}} - 
+            Time elapsed: {{this._doc.timeElapsed}} seconds - 
+            Word length: {{this._doc.settings.numLetters}} - 
+            Allow letter repetition: {{this._doc.settings.allowRepetition}}
+        </li>
+    {{/each}}
+</ul>

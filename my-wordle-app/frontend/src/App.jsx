@@ -58,6 +58,8 @@ function App() {
     setPreviousGuesses([]);
     setGameWon(false);
     setGuess('');
+    setHighscoreSubmitted(false);
+    setPlayerName('');
   };
 
   function handleSubmit(e) {
@@ -101,8 +103,13 @@ function App() {
     e.preventDefault();
   
     const data = {
-      playerName,
-      guesses: previousGuesses
+      playerName: playerName,
+      timeElapsed: timer,
+      guesses: previousGuesses.map(guess => guess.guess),
+      settings: {
+        numLetters: numLetters,
+        allowRepetition: allowRepetition,
+      }
     };
   
     fetch('/api/highscores', {
@@ -127,6 +134,7 @@ function App() {
     setGameStarted(false);
     setPreviousGuesses([]);
   };
+  
   
   return (
     <div className="App">

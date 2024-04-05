@@ -1,9 +1,13 @@
 import mongoose from "mongoose";
 
-const Result = mongoose.model('Result', {
+const highscoreResult = mongoose.model('highscoreResult', {
   playerName: String,
+  timeElapsed: Number,
   guesses: Array,
+  settings: {
+    numLetters: Number,
+    allowRepetition: Boolean,
+  }
 });
 
-export { Result };
-
+export { highscoreResult };
