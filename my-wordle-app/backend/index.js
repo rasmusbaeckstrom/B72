@@ -1,12 +1,14 @@
 import express from "express";
 import fs from 'fs/promises';
 import words from './src/words.js'
+import mongoose from "mongoose";
+import { Result } from "./src/models.js";
+
+mongoose.connect('mongodb://localhost:27017/highscores');
 
 const app = express();
 
 app.use(express.json());
-
-const highscore = [];
 
 app.get('/', async (req, res) => {
   const html = await fs.readFile('../frontend/dist/index.html');
@@ -17,14 +19,19 @@ app.get('/api/words', (req, res) => {
   res.json(words);
 });
 
-app.get('/api/highscore', (req, res) => {
-  res.json({ highscore });
+app.get('/api/highscores', async (req, res) => {
+  const results = await Result.find();
+  res.json({ results });
 });
 
-app.post('/api/highscore', (req, res) => {
-  const newScore = req.body;
-  highscore.push(newScore);
-  res.status(201).send("Highscore added :)");
+app.post('/api/highscores', async (req, res) => {
+  const highscoreData = req.body
+  console.log(req.body);
+
+  const highscoreModel = new Result(highscoreData);
+  await highscoreModel.save();
+
+  res.status(201).json(highscoreData);
 });
 
 app.use('/assets', express.static('../frontend/dist/assets'));

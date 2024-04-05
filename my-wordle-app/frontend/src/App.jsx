@@ -6,10 +6,10 @@ import './components/styles.css'
 
 
 function App() {
-  const [numLetters, setNumLetters] = useState('5'); 
-  const [allowRepetition, setAllowRepetition] = useState(true); 
-  const [allowSameWordGuess, setAllowSameWordGuess] = useState(false); 
-  const [guess, setGuess] = useState(''); 
+  const [numLetters, setNumLetters] = useState('5');
+  const [allowRepetition, setAllowRepetition] = useState(true);
+  const [allowSameWordGuess, setAllowSameWordGuess] = useState(false);
+  const [guess, setGuess] = useState('');
   const [words, setWords] = useState({});
   const [previousGuesses, setPreviousGuesses] = useState([]);
   const [randomWord, setRandomWord] = useState(false);
@@ -99,19 +99,33 @@ function App() {
 
   function handleHighscoreSubmit(e) {
     e.preventDefault();
-
+  
     const data = {
       playerName,
-      time: timer,
-      guesses: previousGuesses,
-      settings: {
-        numLetters,
-        allowRepetition,
-      },
+      guesses: previousGuesses
     };
-    // data till backend? 
-    //fetch('/api/highscore', { method: 'POST', body: JSON.stringify(data) ?????????? })
+  
+    fetch('/api/highscores', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log('Highscore submitted');
+      } else {
+        console.error('Failed to submit');
+      }
+    })
+    .catch(error => {
+      console.error('Error submitting highscore:', error);
+    });
+  
     setHighscoreSubmitted(true);
+    setGameStarted(false);
+    setPreviousGuesses([]);
   };
   
   return (
