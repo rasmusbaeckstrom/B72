@@ -1,5 +1,5 @@
 // Function that takes chosen and guessed word as parameters
-export default function feedback(chosenWord, guessWord) {
+export default function FeedbackAlgorithm(chosenWord, guessWord) {
   
   // Declare a feedback array
   const feedbackArray = [];
