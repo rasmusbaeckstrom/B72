@@ -1,21 +1,29 @@
 <div class="container d-flex justify-content-center vh-100 mt-3">
-  <div>
+  <div class="text-center mx-auto">
     <h1>Highscores</h1>
-    <ul>
-      {{#each highscores}}
-        <li>
-          Name:
-          {{this._doc.playerName}}
-          - Number of guesses:
-          {{this._doc.guesses.length}}
-          - Time elapsed:
-          {{this._doc.timeElapsed}}
-          seconds - Word length:
-          {{this._doc.settings.numLetters}}
-          - Allow letter repetition:
-          {{this._doc.settings.allowRepetition}}
-        </li>
-      {{/each}}
-    </ul>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Number of guesses</th>
+          <th>Time elapsed</th>
+          <th>Word length</th>
+          <th>Allow letter repetition</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each highscores}}
+          <tr>
+            <td>{{this._doc.playerName}}</td>
+            <td>{{this._doc.guesses.length}}</td>
+            <td>{{this._doc.timeElapsed}} seconds</td>
+            <td>{{this._doc.settings.numLetters}}</td>
+            <td>{{this._doc.settings.allowRepetition}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
   </div>
 </div>
+
+
