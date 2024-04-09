@@ -15,6 +15,15 @@ app.set('views', './templates');
 
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.locals.menuItems = [
+    { name: 'Home', link: '/', active: req.path === '/' },
+    { name: 'About', link: '/about', active: req.path === '/about' },
+    { name: 'Highscores', link: '/highscore', active: req.path === '/highscore' },
+  ];
+  next();
+});
+
 app.get('/', (req, res) => {
   res.render('index');
 });
