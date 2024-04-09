@@ -14,6 +14,7 @@ export default function LetterCountSelector({ value, onChange }) {
         Number of letters in random word (3-10):
         <input
           type="number"
+          className="form-control mb-3"
           min="3"
           max="10"
           value={value}

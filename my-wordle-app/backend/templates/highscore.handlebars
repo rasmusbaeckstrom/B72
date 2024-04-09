@@ -1,12 +1,21 @@
-<h1>Highscores</h1>
-<ul>
-    {{#each highscores}}
+<div class="container d-flex justify-content-center vh-100 mt-3">
+  <div>
+    <h1>Highscores</h1>
+    <ul>
+      {{#each highscores}}
         <li>
-            Name: {{this._doc.playerName}} - 
-            Number of guesses: {{this._doc.guesses.length}} - 
-            Time elapsed: {{this._doc.timeElapsed}} seconds - 
-            Word length: {{this._doc.settings.numLetters}} - 
-            Allow letter repetition: {{this._doc.settings.allowRepetition}}
+          Name:
+          {{this._doc.playerName}}
+          - Number of guesses:
+          {{this._doc.guesses.length}}
+          - Time elapsed:
+          {{this._doc.timeElapsed}}
+          seconds - Word length:
+          {{this._doc.settings.numLetters}}
+          - Allow letter repetition:
+          {{this._doc.settings.allowRepetition}}
         </li>
-    {{/each}}
-</ul>
+      {{/each}}
+    </ul>
+  </div>
+</div>

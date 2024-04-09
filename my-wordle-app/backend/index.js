@@ -1,5 +1,4 @@
 import express from "express";
-//import fs from 'fs/promises';
 import words from './src/words.js'
 import mongoose from "mongoose";
 import { highscoreResult } from "./src/models.js";
@@ -37,11 +36,6 @@ app.get('/highscore', async (req, res) => {
     console.log(highscores);
     res.render('highscore', { highscores });
 });
-
-/*app.get('/', async (req, res) => {
-  const html = await fs.readFile('../frontend/dist/index.html');
-  res.type('html').send(html);
-});*/
 
 app.get('/api/words', (req, res) => {
   res.json(words);

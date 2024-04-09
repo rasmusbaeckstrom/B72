@@ -114,64 +114,75 @@ function App() {
   }, [gameStarted, gameWon]);
 
   return (
-    <div className="App">
-      <h1>Welcome to Rasmus Wordle!</h1>
-      <>
-        <LetterCountSelector
-          value={numLetters}
-          onChange={handleLettersChange}
-        />
-        <RepetitionSelector
-          value={allowRepetition}
-          onChange={handleRepetitionChange}
-        />
-        <button onClick={handleStartGame}>Start the game!</button>
-      </>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={guess}
-          onChange={handleGuessChange}
-          placeholder={`Enter a ${numLetters}-letter word`}
-          disabled={!gameStarted}
-        />
-        <button type="submit">Guess</button>
-      </form>
-      <FeedbackResult guesses={previousGuesses} />
-      {gameStarted && (
-        <div>
-          <h2>Timer</h2>
-          <p>{timer} seconds</p>
+    <div className="container d-flex justify-content-center vh-100">
+      <div className="App text-center">
+        <h1>Let's play Wordle!</h1>
+        <div className="mb-3">
+          <LetterCountSelector
+            value={numLetters}
+            onChange={handleLettersChange}
+          />
+          <RepetitionSelector
+            value={allowRepetition}
+            onChange={handleRepetitionChange}
+          />
         </div>
-      )}
-      {gameWon && !highscoreSubmitted && (
-        <div>
-          <h2>Congratulations! You've won!</h2>
-          <form
-            onSubmit={(e) =>
-              handleHighscoreSubmit(
-                e,
-                playerName,
-                timer,
-                previousGuesses,
-                numLetters,
-                allowRepetition,
-                setHighscoreSubmitted,
-                setGameStarted,
-                setPreviousGuesses
-              )
-            }
-          >
-            <input
-              type="text"
-              value={playerName}
-              onChange={(e) => setPlayerName(e.target.value)}
-              placeholder="Enter your name"
-            />
-            <button type="submit">Submit Highscore</button>
-          </form>
-        </div>
-      )}
+        <button className="btn btn-primary mb-3" onClick={handleStartGame}>
+          Start the game!
+        </button>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            className="form-control mb-3"
+            value={guess}
+            onChange={handleGuessChange}
+            placeholder={`Enter a ${numLetters}-letter word`}
+            disabled={!gameStarted}
+          />
+          <button type="submit" className="btn btn-primary mb-3">
+            Guess
+          </button>
+        </form>
+        {gameStarted && (
+          <div>
+            <h2>Timer</h2>
+            <p>{timer} seconds</p>
+          </div>
+        )}
+        <FeedbackResult guesses={previousGuesses} />
+        {gameWon && !highscoreSubmitted && (
+          <div>
+            <h2>Congratulations! You've won!</h2>
+            <form
+              onSubmit={(e) =>
+                handleHighscoreSubmit(
+                  e,
+                  playerName,
+                  timer,
+                  previousGuesses,
+                  numLetters,
+                  allowRepetition,
+                  setHighscoreSubmitted,
+                  setGameStarted,
+                  setPreviousGuesses
+                )
+              }
+            >
+              <input
+              required
+                type="text"
+                className="form-control mb-3"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                placeholder="Enter your name"
+              />
+              <button type="submit" className="btn btn-primary mb-3">
+                Submit Highscore
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
