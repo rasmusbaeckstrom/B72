@@ -1,8 +1,8 @@
-
-  <ul class="nav justify-content-center mt-5" role="menu">
-    {{#each menuItems}}
-      <li class="nav-item">
-        <a class="nav-link {{#if this.active}}text-dark{{/if}}" href="{{this.link}}" aria-current="{{this.active}}">{{this.name}}</a>
-      </li>
-    {{/each}}
-  </ul>
+<ul class="nav justify-content-center mt-2" role="menu">
+  {{#each menuItems}}
+  <li class="nav-item">
+    <a class="nav-link {{#if this.active}}text-dark{{/if}}" href="{{this.link}}"
+      aria-current="{{this.active}}">{{this.name}}</a>
+  </li>
+  {{/each}}
+</ul>

@@ -4,7 +4,14 @@ import mongoose from "mongoose";
 import { highscoreResult } from "./src/models.js";
 import { engine } from 'express-handlebars';
 
-mongoose.connect('mongodb://localhost:27017/highscores');
+mongoose.connect('mongodb://127.0.0.1:27017/highscores').
+  catch(error => handleError(error));
+
+try {
+  await mongoose.connect('mongodb://127.0.0.1:27017/highscores');
+} catch (error) {
+  handleError(error);
+}
 
 const app = express();
 
@@ -16,7 +23,7 @@ app.use(express.json());
 
 app.use((req, res, next) => {
   res.locals.menuItems = [
-    { name: 'Home', link: '/', active: req.path === '/' },
+    { name: 'Game', link: '/', active: req.path === '/' },
     { name: 'About', link: '/about', active: req.path === '/about' },
     { name: 'Highscores', link: '/highscore', active: req.path === '/highscore' },
   ];
@@ -32,9 +39,13 @@ app.get('/about', (req, res) => {
 });
 
 app.get('/highscore', async (req, res) => {
-  const highscores = await highscoreResult.find().sort({ timeElapsed: 1 });
-    console.log(highscores);
+  try {
+    const highscores = await highscoreResult.find().sort({ timeElapsed: 1 });
     res.render('highscore', { highscores });
+  } catch (error) {
+    console.error("An error occurred while fetching highscores:", error);
+    res.render('highscore-error');
+  }
 });
 
 app.get('/api/words', (req, res) => {
@@ -42,14 +53,17 @@ app.get('/api/words', (req, res) => {
 });
 
 app.post('/api/highscores', async (req, res) => {
-  const highscoreData = req.body
-  console.log(req.body);
-
-  const highscoreModel = new highscoreResult(highscoreData);
-  await highscoreModel.save();
-
-  res.status(201).json(highscoreData);
+  try {
+    const highscoreData = req.body;
+    const highscoreModel = new highscoreResult(highscoreData);
+    await highscoreModel.save();
+    res.sendStatus(201);
+  } catch (error) {
+    console.error("An error occurred while saving highscore:", error);
+    res.sendStatus(500);
+  }
 });
+
 
 app.use('/assets', express.static('../frontend/dist/assets'));
 

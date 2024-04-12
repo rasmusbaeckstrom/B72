@@ -54,8 +54,6 @@ function App() {
   function handleStartGame() {
     const newRandomWord = getRandomWord();
     setRandomWord(newRandomWord);
-    // visa det slumpade ordet, ta bort sen...
-    console.log("Slumpat ord:", newRandomWord);
     setGameStarted(true);
     setTimer(0);
     setPreviousGuesses([]);
@@ -116,7 +114,6 @@ function App() {
   return (
     <div className="container d-flex justify-content-center vh-100">
       <div className="App text-center">
-        <h1>Let's play Wordle!</h1>
         <div className="mb-3">
           <LetterCountSelector
             value={numLetters}
@@ -127,9 +124,23 @@ function App() {
             onChange={handleRepetitionChange}
           />
         </div>
-        <button className="btn btn-primary mb-3" onClick={handleStartGame}>
-          Start the game!
-        </button>
+        <div className="row">
+          <div className="col mb-3">
+            <button
+              className={`btn mb-3 ${
+                gameStarted ? "btn-secondary" : "btn-success"
+              }`}
+              onClick={handleStartGame}
+            >
+              Start the game!
+            </button>
+          </div>
+          {gameStarted && (
+            <div className="col mb-3">
+              <p>{timer} seconds</p>
+            </div>
+          )}
+        </div>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -139,20 +150,18 @@ function App() {
             placeholder={`Enter a ${numLetters}-letter word`}
             disabled={!gameStarted}
           />
-          <button type="submit" className="btn btn-primary mb-3">
+          <button
+            type="submit"
+            className={`btn ${gameStarted ? "btn-success" : "btn-danger"} mb-3`}
+            disabled={!gameStarted || gameWon}
+          >
             Guess
           </button>
         </form>
-        {gameStarted && (
-          <div>
-            <h2>Timer</h2>
-            <p>{timer} seconds</p>
-          </div>
-        )}
         <FeedbackResult guesses={previousGuesses} />
         {gameWon && !highscoreSubmitted && (
           <div>
-            <h2>Congratulations! You've won!</h2>
+            <h2>Correct answer!</h2>
             <form
               onSubmit={(e) =>
                 handleHighscoreSubmit(
@@ -169,7 +178,7 @@ function App() {
               }
             >
               <input
-              required
+                required
                 type="text"
                 className="form-control mb-3"
                 value={playerName}

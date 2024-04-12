@@ -13,17 +13,15 @@
       </thead>
       <tbody>
         {{#each highscores}}
-          <tr>
-            <td>{{this._doc.playerName}}</td>
-            <td>{{this._doc.guesses.length}}</td>
-            <td>{{this._doc.timeElapsed}} seconds</td>
-            <td>{{this._doc.settings.numLetters}}</td>
-            <td>{{this._doc.settings.allowRepetition}}</td>
-          </tr>
+        <tr>
+          <td>{{this._doc.playerName}}</td>
+          <td>{{this._doc.guesses.length}}</td>
+          <td>{{this._doc.timeElapsed}} seconds</td>
+          <td>{{this._doc.settings.numLetters}}</td>
+          <td>{{this._doc.settings.allowRepetition}}</td>
+        </tr>
         {{/each}}
       </tbody>
     </table>
   </div>
 </div>
-
-

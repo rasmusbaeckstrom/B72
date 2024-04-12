@@ -3,7 +3,6 @@ import React from "react";
 function FeedbackResult({ guesses }) {
   return (
     <div>
-      <h2>Feedback</h2>
       <ul>
         {guesses.map((guess, guessIndex) => (
           <li key={guessIndex}>
